@@ -166,7 +166,6 @@ out geom;`;
       description: 'Serverless backend providing real-time data connections for Singaporean families planning Shanghai itineraries.',
       endpoints: {
         health: '/api/health',
-        heat_stress: '/api/heat-stress',
         bund_attractions: '/api/ShanghaiTravel?action=bund_attractions',
         china_map: '/api/ShanghaiTravel?action=china_map',
         food_guide: '/api/ShanghaiTravel?action=food_guide',

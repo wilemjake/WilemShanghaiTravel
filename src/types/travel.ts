@@ -5,8 +5,35 @@ export interface TripConfig {
   seniors: number;
   children: number;
   includeSuzhou: boolean;
+  suzhouDate?: string; // e.g. "2026-11-03"
   includeHangzhou: boolean;
+  hangzhouDate?: string; // e.g. "2026-11-02"
   pacePreference: 'gentle' | 'moderate';
+}
+
+export interface HotelStay {
+  id: string;
+  name: string;
+  district: string;
+  address: string;
+  checkInDate: string;
+  checkOutDate: string;
+  accessibilityNotes: string;
+  bookingRef?: string;
+}
+
+export interface DayCustomization {
+  dayNumber: number;
+  dateStr: string;
+  destination: 'Shanghai' | 'Suzhou' | 'Hangzhou' | 'Custom';
+  customDestinationName?: string;
+  themeTitle: string;
+  roughPlanNotes: string;
+  morningTime: string; // e.g. "09:30"
+  lunchTime: string;   // e.g. "12:30"
+  afternoonTime: string; // e.g. "14:30"
+  dinnerTime: string;  // e.g. "18:30"
+  hotelId?: string;
 }
 
 export interface LiveWeatherData {
@@ -29,13 +56,6 @@ export interface LiveWeatherData {
     precipitation_probability: number[];
     weathercode: number[];
   };
-}
-
-export interface HeatStressState {
-  loading: boolean;
-  data: any | null;
-  error: string | null;
-  source: string;
 }
 
 export interface OverpassAttraction {
@@ -73,10 +93,17 @@ export interface NominatimPlace {
   };
 }
 
-export interface ApiFetchState<T> {
-  loading: boolean;
-  data: T | null;
-  error: string | null;
-  source: string;
-  refusedOrEmpty?: boolean;
+export interface MichelinRestaurant {
+  id: string;
+  nameEn: string;
+  nameCn: string;
+  distinction: '3-Star' | '2-Star' | '1-Star' | 'Bib Gourmand' | 'Selected';
+  cuisine: string;
+  district: string;
+  address: string;
+  priceLevel: '¥' | '¥¥' | '¥¥¥' | '¥¥¥¥';
+  specialties: string[];
+  familySeniorTip: string;
+  reservationNeeded: boolean;
+  url?: string;
 }

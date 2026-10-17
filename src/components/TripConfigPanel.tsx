@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calendar, Users, Train, Heart, AlertCircle } from 'lucide-react';
+import { Calendar, Users, Train, Heart, AlertCircle, Clock } from 'lucide-react';
 import { TripConfig } from '../types/travel';
 
 interface TripConfigPanelProps {
@@ -31,7 +31,7 @@ export const TripConfigPanel: React.FC<TripConfigPanelProps> = ({ config, onChan
             <span>Trip Parameters & Family Setup</span>
           </h2>
           <p className="text-xs text-slate-400 mt-1">
-            Singaporean family itinerary customization with elderly and child comfort protections.
+            Set your dates, family member counts, and schedule exact dates for Suzhou and Hangzhou day trips.
           </p>
         </div>
         <div className="flex items-center gap-4 text-xs font-mono text-slate-300">
@@ -161,42 +161,76 @@ export const TripConfigPanel: React.FC<TripConfigPanelProps> = ({ config, onChan
           </div>
         </div>
 
-        {/* 3. Nearby Day Trips (Suzhou & Hangzhou) */}
+        {/* 3. Nearby Day Trips with Specific Dates */}
         <div className="space-y-3">
           <label className="text-xs font-semibold text-slate-300 flex items-center gap-2">
             <Train className="w-4 h-4 text-emerald-400" />
             <span>Nearby City Day Trips (CRH High-Speed Rail)</span>
           </label>
-          <div className="space-y-2 bg-slate-950/60 p-3 rounded-lg border border-slate-800">
-            <label className="flex items-start gap-2.5 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={config.includeSuzhou}
-                onChange={(e) => onChange({ ...config, includeSuzhou: e.target.checked })}
-                className="mt-0.5 rounded border-slate-700 bg-slate-900 text-emerald-600 focus:ring-emerald-500"
-              />
-              <div>
-                <span className="text-xs font-medium text-white block">Suzhou Day Trip (25 min CRH)</span>
-                <span className="text-[11px] text-slate-400 block leading-relaxed">
-                  Gentle classical canals, Shantang street boat rides, and flat paved gardens.
-                </span>
-              </div>
-            </label>
+          <div className="space-y-3 bg-slate-950/60 p-3 rounded-lg border border-slate-800">
+            {/* Hangzhou Day Trip */}
+            <div className="space-y-1.5">
+              <label className="flex items-start gap-2.5 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={config.includeHangzhou}
+                  onChange={(e) => onChange({ ...config, includeHangzhou: e.target.checked })}
+                  className="mt-0.5 rounded border-slate-700 bg-slate-900 text-emerald-600 focus:ring-emerald-500"
+                />
+                <div>
+                  <span className="text-xs font-medium text-white block">Hangzhou Day Trip (45 min CRH)</span>
+                  <span className="text-[11px] text-slate-400 block leading-relaxed">
+                    West Lake electric cruise boat & shaded Longjing tea village.
+                  </span>
+                </div>
+              </label>
 
-            <label className="flex items-start gap-2.5 cursor-pointer pt-2 border-t border-slate-800/80">
-              <input
-                type="checkbox"
-                checked={config.includeHangzhou}
-                onChange={(e) => onChange({ ...config, includeHangzhou: e.target.checked })}
-                className="mt-0.5 rounded border-slate-700 bg-slate-900 text-emerald-600 focus:ring-emerald-500"
-              />
-              <div>
-                <span className="text-xs font-medium text-white block">Hangzhou Day Trip (45 min CRH)</span>
-                <span className="text-[11px] text-slate-400 block leading-relaxed">
-                  West Lake tranquil electric boat tour & shaded Longjing tea village.
-                </span>
-              </div>
-            </label>
+              {config.includeHangzhou && (
+                <div className="pl-6 pt-1 flex items-center gap-2">
+                  <span className="text-[11px] text-slate-400">Scheduled Date:</span>
+                  <input
+                    type="date"
+                    value={config.hangzhouDate || config.startDate}
+                    min={config.startDate}
+                    max={config.endDate}
+                    onChange={(e) => onChange({ ...config, hangzhouDate: e.target.value })}
+                    className="bg-slate-900 border border-slate-700 rounded px-2 py-1 text-xs text-emerald-400 font-mono focus:outline-none focus:border-emerald-500"
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* Suzhou Day Trip */}
+            <div className="space-y-1.5 pt-2 border-t border-slate-800/80">
+              <label className="flex items-start gap-2.5 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={config.includeSuzhou}
+                  onChange={(e) => onChange({ ...config, includeSuzhou: e.target.checked })}
+                  className="mt-0.5 rounded border-slate-700 bg-slate-900 text-emerald-600 focus:ring-emerald-500"
+                />
+                <div>
+                  <span className="text-xs font-medium text-white block">Suzhou Day Trip (25 min CRH)</span>
+                  <span className="text-[11px] text-slate-400 block leading-relaxed">
+                    Gentle classical canals, Shantang street boat rides, and flat paved gardens.
+                  </span>
+                </div>
+              </label>
+
+              {config.includeSuzhou && (
+                <div className="pl-6 pt-1 flex items-center gap-2">
+                  <span className="text-[11px] text-slate-400">Scheduled Date:</span>
+                  <input
+                    type="date"
+                    value={config.suzhouDate || config.endDate}
+                    min={config.startDate}
+                    max={config.endDate}
+                    onChange={(e) => onChange({ ...config, suzhouDate: e.target.value })}
+                    className="bg-slate-900 border border-slate-700 rounded px-2 py-1 text-xs text-emerald-400 font-mono focus:outline-none focus:border-emerald-500"
+                  />
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

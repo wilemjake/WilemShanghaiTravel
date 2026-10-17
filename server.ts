@@ -3,7 +3,6 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import healthHandler from './api/health.ts';
-import heatStressHandler from './api/heat-stress.ts';
 import shanghaiTravelHandler from './api/ShanghaiTravel.ts';
 
 dotenv.config();
@@ -17,9 +16,8 @@ async function startServer() {
 
   app.use(express.json());
 
-  // Mount serverless function routes to match Vercel & client expectations
+  // Mount active serverless function routes to match Vercel & client expectations
   app.all('/api/health', (req, res) => healthHandler(req, res));
-  app.all('/api/heat-stress', (req, res) => heatStressHandler(req, res));
   app.all('/api/ShanghaiTravel', (req, res) => shanghaiTravelHandler(req, res));
 
   if (process.env.NODE_ENV === 'production') {

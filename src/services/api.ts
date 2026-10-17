@@ -42,46 +42,6 @@ export async function fetchLiveShanghaiWeather(): Promise<{ data: LiveWeatherDat
   }
 }
 
-/**
- * 2. Live coastal heat stress data from NEA
- * Fetched ONLY through our project's /api/heat-stress as strictly required.
- */
-export async function fetchLiveHeatStress(): Promise<{ data: any | null; error: string | null; statusText?: string }> {
-  try {
-    const res = await fetch('/api/heat-stress', { signal: timeoutSignal(8000) });
-    const text = await res.text();
-    let json: any = null;
-    try {
-      json = JSON.parse(text);
-    } catch {
-      json = { raw: text };
-    }
-
-    if (!res.ok) {
-      return {
-        data: null,
-        error: json?.error || `NEA heat stress endpoint refused with HTTP ${res.status} (${res.statusText}).`
-      };
-    }
-
-    if (!json || (Array.isArray(json) && json.length === 0) || (typeof json === 'object' && Object.keys(json).length === 0)) {
-      return {
-        data: null,
-        error: 'NEA coastal heat stress data returned empty.'
-      };
-    }
-
-    return { data: json, error: null };
-  } catch (err: any) {
-    const isTimeout = err.name === 'AbortError';
-    return {
-      data: null,
-      error: isTimeout
-        ? 'Request to /api/heat-stress timed out after 8000ms.'
-        : `Connection to /api/heat-stress refused: ${err.message || 'Service offline'}.`
-    };
-  }
-}
 
 /**
  * 3. Attractions near Bund from Overpass

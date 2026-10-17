@@ -10,7 +10,7 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ onReset, activeTab, setActiveTab }) => {
   return (
     <header className="sticky top-0 z-40 bg-slate-900 border-b border-slate-800 text-white shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-6">
         {/* Zone 1: Brand title wordmark */}
         <div className="flex items-center gap-2.5 whitespace-nowrap shrink-0">
           <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center text-white">
@@ -22,7 +22,7 @@ export const Header: React.FC<HeaderProps> = ({ onReset, activeTab, setActiveTab
         </div>
 
         {/* Zone 2: Clean single-line nav links */}
-        <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-300">
+        <nav className="hidden lg:flex items-center gap-5 text-sm font-medium text-slate-300">
           <button
             onClick={() => setActiveTab('itinerary')}
             className={`whitespace-nowrap shrink-0 transition-colors py-1 border-b-2 ${
@@ -34,14 +34,24 @@ export const Header: React.FC<HeaderProps> = ({ onReset, activeTab, setActiveTab
             Itinerary Planner
           </button>
           <button
-            onClick={() => setActiveTab('weather-heat')}
+            onClick={() => setActiveTab('hotels')}
             className={`whitespace-nowrap shrink-0 transition-colors py-1 border-b-2 ${
-              activeTab === 'weather-heat'
+              activeTab === 'hotels'
                 ? 'border-emerald-500 text-white font-semibold'
                 : 'border-transparent hover:text-white'
             }`}
           >
-            Live Weather & Heat
+            Hotels & Stays
+          </button>
+          <button
+            onClick={() => setActiveTab('weather')}
+            className={`whitespace-nowrap shrink-0 transition-colors py-1 border-b-2 ${
+              activeTab === 'weather'
+                ? 'border-emerald-500 text-white font-semibold'
+                : 'border-transparent hover:text-white'
+            }`}
+          >
+            Live Weather
           </button>
           <button
             onClick={() => setActiveTab('attractions-map')}
@@ -61,7 +71,7 @@ export const Header: React.FC<HeaderProps> = ({ onReset, activeTab, setActiveTab
                 : 'border-transparent hover:text-white'
             }`}
           >
-            Food Guides
+            Michelin & Food Guides
           </button>
           <button
             onClick={() => setActiveTab('sg-tips')}

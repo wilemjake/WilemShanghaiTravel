@@ -1,20 +1,14 @@
 import React from 'react';
-import { CloudSun, Wind, Droplets, Thermometer, AlertTriangle, RefreshCw, CheckCircle2 } from 'lucide-react';
+import { CloudSun, Wind, AlertTriangle, RefreshCw, CheckCircle2 } from 'lucide-react';
 import { LiveWeatherData } from '../types/travel';
 
-interface WeatherHeatPanelProps {
+interface WeatherPanelProps {
   weather: {
     loading: boolean;
     data: LiveWeatherData | null;
     error: string | null;
   };
-  heatStress: {
-    loading: boolean;
-    data: any | null;
-    error: string | null;
-  };
   onRefreshWeather: () => void;
-  onRefreshHeatStress: () => void;
 }
 
 // Weather code interpreter for Open-Meteo WMO codes
@@ -32,15 +26,12 @@ function getWeatherDescription(code: number | undefined): string {
   return `Weather Code ${code}`;
 }
 
-export const WeatherHeatPanel: React.FC<WeatherHeatPanelProps> = ({
+export const WeatherPanel: React.FC<WeatherPanelProps> = ({
   weather,
-  heatStress,
-  onRefreshWeather,
-  onRefreshHeatStress
+  onRefreshWeather
 }) => {
   return (
     <div className="space-y-6">
-      {/* 1. Live Weather Forecast for Shanghai (Open-Meteo) */}
       <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 md:p-6 text-white shadow-sm space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
           <div className="flex items-center gap-2">
@@ -70,13 +61,12 @@ export const WeatherHeatPanel: React.FC<WeatherHeatPanelProps> = ({
             <span>Fetching live weather data from Open-Meteo...</span>
           </div>
         ) : weather.error ? (
-          /* Sub-goal 4: When data is empty, slow or refused, say so in plain words */
           <div className="bg-rose-950/40 border border-rose-800/60 rounded-lg p-4 text-xs text-rose-200 space-y-2">
             <div className="flex items-center gap-2 text-rose-400 font-semibold text-sm">
               <AlertTriangle className="w-4 h-4" />
               <span>Weather Data Unavailable (Empty, Slow, or Refused)</span>
             </div>
-            <p className="text-slate-300 leading-relaxed">
+            <p className="text-slate-300 leading-relaxed font-mono text-[11px] bg-slate-950/60 p-2.5 rounded border border-slate-800">
               {weather.error}
             </p>
             <p className="text-slate-400 text-[11px]">
@@ -127,7 +117,7 @@ export const WeatherHeatPanel: React.FC<WeatherHeatPanelProps> = ({
               </div>
             </div>
 
-            {/* Daily 7-Day Forecast Row */}
+            {/* Daily 7-Day Forecast */}
             {weather.data.daily && weather.data.daily.time && (
               <div>
                 <span className="text-xs font-medium text-slate-300 block mb-2">
@@ -161,71 +151,6 @@ export const WeatherHeatPanel: React.FC<WeatherHeatPanelProps> = ({
             )}
           </div>
         ) : null}
-      </div>
-
-      {/* 2. Live Coastal Heat Stress Data from NEA (fetched only through /api/heat-stress) */}
-      <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 md:p-6 text-white shadow-sm space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
-          <div className="flex items-center gap-2">
-            <Thermometer className="w-5 h-5 text-rose-400" />
-            <div>
-              <h3 className="text-base font-semibold text-white">
-                Live Coastal Heat Stress Data
-              </h3>
-              <p className="text-xs text-slate-400">
-                Fetched only through project endpoint: <code className="font-mono text-emerald-400">/api/heat-stress</code> (upstream: neaweather.com)
-              </p>
-            </div>
-          </div>
-          <button
-            onClick={onRefreshHeatStress}
-            disabled={heatStress.loading}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-lg border border-slate-700 transition-colors w-fit"
-          >
-            <RefreshCw className={`w-3.5 h-3.5 ${heatStress.loading ? 'animate-spin' : ''}`} />
-            <span>{heatStress.loading ? 'Checking...' : 'Query /api/heat-stress'}</span>
-          </button>
-        </div>
-
-        {heatStress.loading ? (
-          <div className="py-8 text-center text-xs text-slate-400 flex flex-col items-center justify-center gap-2">
-            <RefreshCw className="w-5 h-5 animate-spin text-rose-500" />
-            <span>Connecting to /api/heat-stress...</span>
-          </div>
-        ) : heatStress.error ? (
-          /* Sub-goal 4: When the data is empty, slow or refused, the screen says so in plain words */
-          <div className="bg-amber-950/30 border border-amber-800/60 rounded-lg p-4 text-xs text-amber-200 space-y-2">
-            <div className="flex items-center gap-2 text-amber-400 font-semibold text-sm">
-              <AlertTriangle className="w-4 h-4" />
-              <span>NEA Coastal Heat Stress: Service Refused or Unavailable</span>
-            </div>
-            <p className="text-slate-300 leading-relaxed font-mono text-[11px] bg-slate-950/60 p-2.5 rounded border border-slate-800">
-              {heatStress.error}
-            </p>
-            <div className="text-slate-400 text-[11px] space-y-1">
-              <p>
-                <strong>Plain language explanation:</strong> The serverless endpoint <code className="text-slate-300">/api/heat-stress</code> attempted to query <code className="text-slate-300">https://neaweather.com/api/heat-stress</code>, which is currently responding with HTTP 404 (Not Found) or refusing connection.
-              </p>
-              <p>
-                *Strict guardrail compliant: No synthetic or invented heat stress values are rendered.
-              </p>
-            </div>
-          </div>
-        ) : heatStress.data ? (
-          <div className="bg-slate-950/60 p-4 rounded-lg border border-slate-800 space-y-2">
-            <div className="flex items-center gap-2 text-emerald-400 text-xs font-semibold">
-              <CheckCircle2 className="w-4 h-4" />
-              <span>Live Heat Stress Data Received via /api/heat-stress</span>
-            </div>
-            <pre className="text-xs font-mono text-slate-300 bg-slate-900 p-3 rounded overflow-x-auto max-h-48">
-              {JSON.stringify(heatStress.data, null, 2)}
-            </pre>
-          </div>
-        ) : (
-          <div className="text-xs text-slate-400 py-3">
-            No response data received yet from /api/heat-stress.
-          </div>
-        )}
       </div>
     </div>
   );
