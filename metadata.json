@@ -1,0 +1,6 @@
+{
+  "name": "WilemShanghaiTravel",
+  "description": "Smart, non-strenuous Shanghai itinerary planner for Singaporean families with live weather, maps, attractions, and food guides.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
